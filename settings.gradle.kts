@@ -21,4 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "pov-tests"
 include(":app")
+include(":payment-sdk")
  
