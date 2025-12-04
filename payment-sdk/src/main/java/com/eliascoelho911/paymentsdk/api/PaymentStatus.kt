@@ -1,14 +1,11 @@
 package com.eliascoelho911.paymentsdk.api
 
-import java.time.Instant
-
 sealed class PaymentStatus {
     data class Approved(
         val id: String,
-        val authCode: String?,
         val maskedCard: String?,
         val brand: String?,
-        val createdAt: Instant
+        val createdAt: Long
     ) : PaymentStatus()
 
     data class Declined(
