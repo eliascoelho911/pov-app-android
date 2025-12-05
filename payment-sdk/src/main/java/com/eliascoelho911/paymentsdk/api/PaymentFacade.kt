@@ -1,8 +1,8 @@
 package com.eliascoelho911.paymentsdk.api
 
 import com.eliascoelho911.paymentsdk.external.client.sandbox.SandboxPaymentClient
+import com.eliascoelho911.paymentsdk.external.hardware.ConsolePinReader
 import com.eliascoelho911.paymentsdk.external.hardware.FakeCardReader
-import com.eliascoelho911.paymentsdk.external.hardware.FakePinReader
 import com.eliascoelho911.paymentsdk.gateway.PaymentGateway
 import com.eliascoelho911.paymentsdk.model.PaymentEvent
 import com.eliascoelho911.paymentsdk.model.PaymentRequest
@@ -18,7 +18,7 @@ interface PaymentFacade {
                 paymentClient = SandboxPaymentClient()
             ),
             cardReader = FakeCardReader(),
-            pinReader = FakePinReader()
+            pinReader = ConsolePinReader()
         )
     }
 }

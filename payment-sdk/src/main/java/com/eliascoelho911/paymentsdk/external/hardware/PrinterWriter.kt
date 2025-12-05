@@ -2,7 +2,7 @@ package com.eliascoelho911.paymentsdk.external.hardware
 
 import kotlinx.coroutines.delay
 
-interface PrinterWriter {
+internal interface PrinterWriter {
     suspend fun print(text: String)
     suspend fun println(text: String)
     suspend fun printLine()

@@ -1,8 +1,7 @@
 package com.eliascoelho911.pov_tests
 
 import com.eliascoelho911.paymentsdk.api.PaymentFacade
-import com.eliascoelho911.paymentsdk.external.hardware.PrinterWriter
-import com.eliascoelho911.paymentsdk.gateway.PrinterGateway
+import com.eliascoelho911.paymentsdk.api.PrinterInteractor
 import com.eliascoelho911.paymentsdk.model.PaymentEvent
 import com.eliascoelho911.paymentsdk.model.PaymentMethod
 import com.eliascoelho911.paymentsdk.model.PaymentRequest
@@ -18,9 +17,9 @@ private data class PaymentCliConfig(
     val installments: Int
 )
 
-private val printerWriter = PrinterGateway(PrinterWriter.console())
-private fun println(message: String) = runBlocking { printerWriter.println(message) }
-private fun printLine() = runBlocking { printerWriter.printLine() }
+private val printerInteractor = PrinterInteractor.console()
+private fun println(message: String) = runBlocking { printerInteractor.println(message) }
+private fun printLine() = runBlocking { printerInteractor.printLine() }
 
 private val paymentFacade = PaymentFacade.sandbox()
 
@@ -39,7 +38,7 @@ fun main(args: Array<String>) = runBlocking {
     paymentFacade.startPayment(request).collect { event ->
         when (event) {
             PaymentEvent.WaitingForCard -> println("Aguardando cartão...")
-            PaymentEvent.WaitingForPin -> println("Aguardando PIN...")
+            PaymentEvent.WaitingForPin -> println("Insira o PIN...")
             is PaymentEvent.CardRead -> println("Cartão lido: ${event.card.maskedPan} (${event.card.brand})")
             is PaymentEvent.PinCollected -> println("PIN capturado com sucesso.")
             PaymentEvent.Processing -> println("Processando pagamento...")

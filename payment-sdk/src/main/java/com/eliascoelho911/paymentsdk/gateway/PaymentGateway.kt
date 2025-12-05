@@ -5,7 +5,7 @@ import com.eliascoelho911.paymentsdk.model.CardPayload
 import com.eliascoelho911.paymentsdk.model.PaymentRequest
 import com.eliascoelho911.paymentsdk.model.PaymentStatus
 
-class PaymentGateway(
+internal class PaymentGateway(
     private val paymentClient: PaymentClient
 ) {
     suspend fun processPayment(

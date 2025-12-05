@@ -1,8 +1,8 @@
-package com.eliascoelho911.paymentsdk.gateway
+package com.eliascoelho911.paymentsdk.api
 
 import com.eliascoelho911.paymentsdk.external.hardware.PrinterWriter
 
-class PrinterGateway(
+class PrinterInteractor internal constructor(
     private val printerWriter: PrinterWriter
 ) {
     suspend fun print(text: String) {
@@ -15,5 +15,11 @@ class PrinterGateway(
 
     suspend fun printLine() {
         printerWriter.printLine()
+    }
+
+    companion object {
+        fun console() = PrinterInteractor(
+            printerWriter = PrinterWriter.console()
+        )
     }
 }

@@ -5,7 +5,7 @@ import com.eliascoelho911.paymentsdk.model.CardDisplayInfo
 import com.eliascoelho911.paymentsdk.model.CardPayload
 import kotlinx.coroutines.delay
 
-interface CardReader {
+internal interface CardReader {
     suspend fun waitAndReadCard(): Card
 }
 
