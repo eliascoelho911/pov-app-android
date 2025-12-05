@@ -6,26 +6,23 @@ import com.eliascoelho911.paymentsdk.api.PaymentRequest
 import com.eliascoelho911.paymentsdk.api.PaymentStatus
 import com.eliascoelho911.paymentsdk.device.DeviceCard
 import com.eliascoelho911.paymentsdk.device.FakeDeviceInteractor
-import com.eliascoelho911.paymentsdk.domain.PaymentClientImpl
+import com.eliascoelho911.paymentsdk.domain.PaymentFacadeImpl
 import com.eliascoelho911.paymentsdk.domain.model.CardDisplayInfo
 import com.eliascoelho911.paymentsdk.domain.model.CardPayload
 import com.eliascoelho911.paymentsdk.gateway.sandbox.SandboxPaymentGateway
 import com.eliascoelho911.paymentsdk.gateway.stripe.StripeClient
-import kotlinx.coroutines.flow.collect
+import kotlinx.cli.ArgParser
+import kotlinx.cli.ArgType
+import kotlinx.cli.optional
 import kotlinx.coroutines.runBlocking
 
 fun main(args: Array<String>) = runBlocking {
-    val amount = args.getOrNull(0)?.toLongOrNull()?.takeIf { it > 0 } ?: 1000L
-    val method = args.getOrNull(1)
-        ?.uppercase()
-        ?.let { runCatching { PaymentMethod.valueOf(it) }.getOrNull() }
-        ?: PaymentMethod.CREDIT
-    val installments = args.getOrNull(2)?.toIntOrNull()?.takeIf { it > 0 } ?: 1
+    val cliConfig = parseArguments(args)
 
     val request = PaymentRequest(
-        amountCents = amount,
-        method = method,
-        installments = installments,
+        amountCents = cliConfig.amount,
+        method = cliConfig.method,
+        installments = cliConfig.installments,
         description = "CLI payment"
     )
 
@@ -45,7 +42,7 @@ fun main(args: Array<String>) = runBlocking {
         delay = 500L
     )
 
-    val paymentClient = PaymentClientImpl(
+    val paymentClient = PaymentFacadeImpl(
         gateway = SandboxPaymentGateway(StripeClient()),
         deviceInteractor = deviceInteractor
     )
@@ -60,6 +57,33 @@ fun main(args: Array<String>) = runBlocking {
         }
     }
 }
+
+private fun parseArguments(args: Array<String>): PaymentCliConfig {
+    val parser = ArgParser("povtests")
+    val amount by parser.argument(ArgType.String, "amount", "Valor em centavos").optional()
+    val method by parser.argument(ArgType.String, "method", "Método de pagamento").optional()
+    val installments by parser.argument(ArgType.String, "installments", "Número de parcelas").optional()
+
+    parser.parse(args)
+
+    return PaymentCliConfig(
+        amount = amount?.toLongOrNull()?.takeIf { it > 0 } ?: DEFAULT_AMOUNT,
+        method = method
+            ?.uppercase()
+            ?.let { runCatching { PaymentMethod.valueOf(it) }.getOrNull() }
+            ?: PaymentMethod.CREDIT,
+        installments = installments?.toIntOrNull()?.takeIf { it > 0 } ?: DEFAULT_INSTALLMENTS
+    )
+}
+
+private data class PaymentCliConfig(
+    val amount: Long,
+    val method: PaymentMethod,
+    val installments: Int
+)
+
+private const val DEFAULT_AMOUNT = 1000L
+private const val DEFAULT_INSTALLMENTS = 1
 
 private fun printStatus(status: PaymentStatus) {
     when (status) {

@@ -1,31 +1,31 @@
 # Repository Guidelines
 
+This Kotlin 2.2 / JVM 21 workspace powers a CLI sample app backed by a payment SDK; follow the steps below to add features safely.
+
 ## Project Structure & Module Organization
-- `app/`: Jetpack Compose UI, navigation, and sales/history flows. Keep code under `app/src/main/java`, resources in `app/src/main/res`. Consume only the SDK public API (no direct Room/database access).
-- `payment-sdk/`: Internal SDK with payment entrypoint, coroutine/Flow APIs, fake gateway integration, and Room storage. Persist transactions here; expose only domain models/events to `app`.
-- `gradle/libs.versions.toml`: Source of truth for versions/aliases. Add libraries/plugins here before using them.
+- `app/` is the CLI entry point (`Main.kt`) that simulates a POS payment; pass amount/method/installments via program args.
+- `payment-sdk/` holds reusable SDK layers: `api` (contracts), `domain` (client orchestration), `device` (card payload abstractions), and `gateway` (Stripe + sandbox integrations).
+- `docs/` stores architecture diagrams describing layer boundaries and POS flows—scan them before changing cross-layer contracts.
 
 ## Build, Test, and Development Commands
-- `./gradlew assembleDebug` — assemble the debug APK.
-- `./gradlew :payment-sdk:test` — JVM unit tests for SDK rules (gateway outcomes, persistence, state transitions).
-- `./gradlew :app:connectedAndroidTest` — instrumentation/Compose UI tests on a device/emulator.
-- `./gradlew :app:installDebug` — deploy the debug build to a connected device.
+- `./gradlew build` compiles both modules and verifies dependency locking.
+- `./gradlew :app:run --args="1000 CREDIT 1"` runs the CLI against the sandbox flow with sample inputs.
+- `./gradlew :payment-sdk:test` executes the Kotlin test suite; run it before pushing changes touching SDK logic.
 
 ## Coding Style & Naming Conventions
-- Kotlin/Compose: 4-space indent, trailing commas when useful. Use `PascalCase` for classes/composables, `camelCase` for functions/properties, `snake_case` for resources.
-- Async APIs should be `suspend` or `Flow`; avoid callbacks. App layer observes `Flow<Event>` from the SDK for payment progress.
-- Boundaries: app orchestrates UI; SDK owns gateway logic, card-reading simulation, and Room repositories. Never store full PAN; keep only last 4 digits, brand, and auth code.
-- Keep the SDK surface stable (`PaymentSdk`/`PaymentsClient`, `startPayment`, `getTransactions`, `getTransaction`). Prefer evolving parameter objects over breaking signatures.
+- Stick to idiomatic Kotlin: 4-space indents, trailing commas where helpful, and expression-bodied functions for short mappers (see `PaymentStatusMapper`).
+- Keep classes/package names under `com.eliascoelho911` in PascalCase, functions/properties camelCase, and constants UPPER_SNAKE_CASE.
+- Coroutines Flow APIs are the default async primitive; expose suspend façades instead of callbacks.
 
 ## Testing Guidelines
-- Frameworks: JUnit for unit tests; AndroidX Compose UI Test/Espresso for instrumentation. Place unit tests in `src/test/java`, UI tests in `src/androidTest/java`, using `*Test`/`*IT` suffixes.
-- Cover scenarios: gateway approved/declined/timeout, Room persistence and retrieval, masking rules, and UI flows for approved/declined sales. Prefer deterministic fakes by seeding the gateway simulator.
-- Run relevant test commands before pushing; call out any gaps in the PR.
+- Place unit tests under `payment-sdk/src/test/kotlin` mirroring the source package, e.g., `domain/PaymentClientImplTest`.
+- Prefer deterministic fake devices/gateways to exercise approval, decline, and error states; mock coroutines with runTest.
+- Failing branches must have companion tests; aim for coverage on each PaymentStatus branch before requesting review.
 
 ## Commit & Pull Request Guidelines
-- Commits: concise, present-tense summaries. Group related changes; optional prefixes (`feat:`, `fix:`, `chore:`) are welcome.
-- Pull requests: include motivation, bullet list of changes, test results, and screenshots/gifs for UI updates. Note SDK API changes and migration steps for the app module.
+- Follow the existing history (`feat: add Stripe gateway integration`, `docs: add architecture diagrams`) and use `type: summary` Conventional Commit prefixes when possible.
+- Each PR should outline the scenario, commands executed (build + tests), and link any relevant diagram updates or issues.
 
-## Architecture Notes
-- Target flow: app calls SDK `startPayment(amount, method, installments, metadata?)`, observes events (`CardReading`, `Authorizing`, `Approved`, `Declined`, `Failed`), then shows receipt/history. SDK persists `TransactionEntity` with id, amount (cents), status, brand, last4, authCode, timestamps, optional raw response.
-- Gateway is a local fake; support deterministic seeds for approvals/declines/timeouts to keep tests and demos reliable. Keep the app thin; complexity stays inside the SDK.
+## Security & Configuration Tips
+- Stripe integration pulls secrets from `STRIPE_SECRET_KEY` and `STRIPE_DEFAULT_CUSTOMER_ID`; set them via env vars or JVM properties and never hard-code them.
+- Do not commit generated `build/` artifacts or local `.env` files; rely on Gradle properties if reproducible config is needed.

@@ -14,4 +14,5 @@ application {
 dependencies {
     implementation(project(":payment-sdk"))
     implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.cli)
 }
