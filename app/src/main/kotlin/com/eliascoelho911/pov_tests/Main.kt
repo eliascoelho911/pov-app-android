@@ -40,7 +40,7 @@ fun main(args: Array<String>) = runBlocking {
         when (event) {
             PaymentEvent.WaitingForCard -> println("Aguardando cartão...")
             PaymentEvent.WaitingForPin -> println("Aguardando PIN...")
-            is PaymentEvent.CardRead -> println("Cartão lido: ${event.card.displayInfo.maskedPan} (${event.card.displayInfo.brand})")
+            is PaymentEvent.CardRead -> println("Cartão lido: ${event.card.maskedPan} (${event.card.brand})")
             is PaymentEvent.PinCollected -> println("PIN capturado com sucesso.")
             PaymentEvent.Processing -> println("Processando pagamento...")
             is PaymentEvent.Finished -> printStatus(event.status)

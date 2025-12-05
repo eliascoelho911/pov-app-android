@@ -13,7 +13,8 @@ internal class SandboxPaymentClient(
 ) : PaymentClient {
     override suspend fun processPayment(
         paymentRequest: PaymentRequest,
-        cardPayload: CardPayload
+        cardPayload: CardPayload,
+        cardPin: String?
     ): PaymentStatus {
         delay(processingDelayMillis)
 

@@ -39,7 +39,8 @@ internal class StripeClient(
 
     override suspend fun processPayment(
         paymentRequest: PaymentRequest,
-        @Suppress("unused") cardPayload: CardPayload
+        @Suppress("unused") cardPayload: CardPayload,
+        cardPin: String?
     ): PaymentStatus = withContext(ioDispatcher) {
         fun ParametersBuilder.appendDefaultValues() {
             append("capture_method", "automatic")

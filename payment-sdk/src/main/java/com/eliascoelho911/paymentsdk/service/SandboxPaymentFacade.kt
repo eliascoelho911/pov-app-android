@@ -18,14 +18,14 @@ internal class SandboxPaymentFacade(
         emit(PaymentEvent.WaitingForCard)
 
         val card = cardReader.waitAndReadCard()
-        emit(PaymentEvent.CardRead(card))
+        emit(PaymentEvent.CardRead(card.displayInfo))
 
         emit(PaymentEvent.WaitingForPin)
         val pin = pinReader.waitAndReadPin()
-        emit(PaymentEvent.PinCollected(pin))
+        emit(PaymentEvent.PinCollected)
 
         emit(PaymentEvent.Processing)
-        val paymentResult = gateway.processPayment(request, card.payload)
+        val paymentResult = gateway.processPayment(request, card.payload, pin)
 
         emit(PaymentEvent.Finished(paymentResult))
     }

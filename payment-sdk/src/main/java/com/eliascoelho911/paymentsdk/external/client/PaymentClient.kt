@@ -7,6 +7,7 @@ import com.eliascoelho911.paymentsdk.model.PaymentStatus
 interface PaymentClient {
     suspend fun processPayment(
         paymentRequest: PaymentRequest,
-        cardPayload: CardPayload
+        cardPayload: CardPayload,
+        cardPin: String?
     ): PaymentStatus
 }

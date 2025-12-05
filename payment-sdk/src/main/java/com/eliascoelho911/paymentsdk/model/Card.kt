@@ -12,7 +12,7 @@ data class CardPayload(
     val cvv: String
 )
 
-data class Card(
+internal data class Card(
     val payload: CardPayload,
     val displayInfo: CardDisplayInfo
 )

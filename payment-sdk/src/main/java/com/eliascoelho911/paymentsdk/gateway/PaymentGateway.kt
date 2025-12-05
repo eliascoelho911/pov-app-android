@@ -10,11 +10,13 @@ class PaymentGateway(
 ) {
     suspend fun processPayment(
         request: PaymentRequest,
-        payload: CardPayload
+        payload: CardPayload,
+        cardPin: String?
     ): PaymentStatus {
         return paymentClient.processPayment(
             paymentRequest = request,
-            cardPayload = payload
+            cardPayload = payload,
+            cardPin = cardPin
         )
     }
 }
