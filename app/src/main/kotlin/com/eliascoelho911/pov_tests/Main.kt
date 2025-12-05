@@ -2,7 +2,10 @@ package com.eliascoelho911.pov_tests
 
 import com.eliascoelho911.paymentsdk.PaymentFacade
 import com.eliascoelho911.paymentsdk.external.hardware.PrinterWriter
-import com.eliascoelho911.paymentsdk.model.*
+import com.eliascoelho911.paymentsdk.model.PaymentEvent
+import com.eliascoelho911.paymentsdk.model.PaymentMethod
+import com.eliascoelho911.paymentsdk.model.PaymentRequest
+import com.eliascoelho911.paymentsdk.model.PaymentStatus
 import kotlinx.cli.ArgParser
 import kotlinx.cli.ArgType
 import kotlinx.cli.optional
@@ -14,37 +17,19 @@ private data class PaymentCliConfig(
     val installments: Int
 )
 
-private const val defaultPin = "1234"
-private val defaultCard = Card(
-    payload = CardPayload(
-        cardNumber = "4242424242424242",
-        cardHolderName = "CLI User",
-        expirationDate = "12/34",
-        cvv = "123"
-    ),
-    displayInfo = CardDisplayInfo(
-        maskedPan = "**** **** **** 4242",
-        brand = "VISA"
-    )
-)
-
 private val printerWriter = PrinterWriter.console()
 private fun println(message: String) = runBlocking { printerWriter.println(message) }
 private fun printLine() = runBlocking { printerWriter.printLine() }
 
+private val paymentFacade = PaymentFacade.create()
+
 fun main(args: Array<String>) = runBlocking {
     val cliConfig = parseArguments(args)
-
     val request = PaymentRequest(
         amountCents = cliConfig.amount,
         method = cliConfig.method,
         installments = cliConfig.installments,
         description = "CLI payment"
-    )
-
-    val paymentFacade = PaymentFacade.create(
-        card = { defaultCard },
-        pin = { defaultPin },
     )
 
     println("Iniciando pagamento de ${request.amountCents} centavos via ${request.method} em ${request.installments}x")

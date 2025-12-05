@@ -3,6 +3,8 @@ package com.eliascoelho911.paymentsdk
 import com.eliascoelho911.paymentsdk.external.client.sandbox.SandboxPaymentClient
 import com.eliascoelho911.paymentsdk.external.hardware.FakeCardReader
 import com.eliascoelho911.paymentsdk.external.hardware.FakePinReader
+import com.eliascoelho911.paymentsdk.external.hardware.defaultCard
+import com.eliascoelho911.paymentsdk.external.hardware.defaultPin
 import com.eliascoelho911.paymentsdk.gateway.PaymentGateway
 import com.eliascoelho911.paymentsdk.model.Card
 import com.eliascoelho911.paymentsdk.service.PaymentService
@@ -10,7 +12,10 @@ import com.eliascoelho911.paymentsdk.service.SandboxPaymentService
 
 interface PaymentFacade : PaymentService {
     companion object {
-        fun create(card: () -> Card, pin: () -> String): PaymentFacade {
+        fun create(
+            card: () -> Card = { defaultCard },
+            pin: () -> String = { defaultPin }
+        ): PaymentFacade {
             return PaymentFacadeImpl(
                 paymentService = SandboxPaymentService(
                     gateway = PaymentGateway(

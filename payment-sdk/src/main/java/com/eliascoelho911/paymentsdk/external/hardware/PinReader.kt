@@ -7,7 +7,7 @@ interface PinReader {
 }
 
 internal class FakePinReader(
-    private val pin: String,
+    private val pin: String = defaultPin,
     val delay: Long = 500L,
 ) : PinReader {
     override suspend fun waitAndReadPin(): String {
@@ -15,3 +15,5 @@ internal class FakePinReader(
         return pin
     }
 }
+
+internal const val defaultPin = "1234"
