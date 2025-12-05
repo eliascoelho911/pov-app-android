@@ -1,10 +1,4 @@
-package com.eliascoelho911.paymentsdk.api
-
-import kotlinx.coroutines.flow.Flow
-
-interface PaymentFacade {
-    suspend fun startPayment(request: PaymentRequest): Flow<PaymentEvent>
-}
+package com.eliascoelho911.paymentsdk.model
 
 sealed class PaymentEvent {
     data object WaitingForCard: PaymentEvent()

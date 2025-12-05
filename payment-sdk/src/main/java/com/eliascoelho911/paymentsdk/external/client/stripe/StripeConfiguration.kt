@@ -1,8 +1,8 @@
-package com.eliascoelho911.paymentsdk.gateway.stripe
+package com.eliascoelho911.paymentsdk.external.client.stripe
 
-import java.util.Properties
+import java.util.*
 
-data class StripeConfiguration(
+internal data class StripeConfiguration(
     val secretKey: String,
     val defaultCustomerId: String,
 ) {

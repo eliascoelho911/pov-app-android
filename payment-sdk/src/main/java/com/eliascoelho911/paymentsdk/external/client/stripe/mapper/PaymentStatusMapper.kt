@@ -1,7 +1,7 @@
-package com.eliascoelho911.paymentsdk.gateway.stripe.mapper
+package com.eliascoelho911.paymentsdk.external.client.stripe.mapper
 
-import com.eliascoelho911.paymentsdk.api.PaymentStatus
-import com.eliascoelho911.paymentsdk.gateway.stripe.StripePaymentResult
+import com.eliascoelho911.paymentsdk.external.client.stripe.StripePaymentResult
+import com.eliascoelho911.paymentsdk.model.PaymentStatus
 
 internal fun StripePaymentResult.getPaymentStatus(): PaymentStatus = when (status) {
     StripePaymentResult.Status.CANCELED -> PaymentStatus.Error(

@@ -1,4 +1,4 @@
-package com.eliascoelho911.paymentsdk.gateway.stripe
+package com.eliascoelho911.paymentsdk.external.client.stripe
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json

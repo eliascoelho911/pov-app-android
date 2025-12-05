@@ -1,4 +1,4 @@
-package com.eliascoelho911.paymentsdk.api
+package com.eliascoelho911.paymentsdk.model
 
 sealed class PaymentStatus {
     data class Approved(

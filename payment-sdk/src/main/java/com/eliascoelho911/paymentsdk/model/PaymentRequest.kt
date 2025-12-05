@@ -1,4 +1,4 @@
-package com.eliascoelho911.paymentsdk.api
+package com.eliascoelho911.paymentsdk.model
 
 data class PaymentRequest(
     val amountCents: Long,

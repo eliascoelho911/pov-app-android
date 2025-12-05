@@ -1,9 +1,9 @@
-package com.eliascoelho911.paymentsdk.gateway.stripe
+package com.eliascoelho911.paymentsdk.external.client.stripe
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class StripePaymentResult(
+internal data class StripePaymentResult(
     val id: String,
     val currency: String,
     val amount: Long,

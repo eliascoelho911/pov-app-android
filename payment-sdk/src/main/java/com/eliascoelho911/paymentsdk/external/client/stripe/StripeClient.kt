@@ -1,11 +1,11 @@
-package com.eliascoelho911.paymentsdk.gateway.stripe
+package com.eliascoelho911.paymentsdk.external.client.stripe
 
-import com.eliascoelho911.paymentsdk.api.PaymentMethod
-import com.eliascoelho911.paymentsdk.api.PaymentRequest
-import com.eliascoelho911.paymentsdk.api.PaymentStatus
-import com.eliascoelho911.paymentsdk.domain.model.CardPayload
-import com.eliascoelho911.paymentsdk.gateway.PaymentClient
-import com.eliascoelho911.paymentsdk.gateway.stripe.mapper.getPaymentStatus
+import com.eliascoelho911.paymentsdk.external.client.PaymentClient
+import com.eliascoelho911.paymentsdk.external.client.stripe.mapper.getPaymentStatus
+import com.eliascoelho911.paymentsdk.model.CardPayload
+import com.eliascoelho911.paymentsdk.model.PaymentMethod
+import com.eliascoelho911.paymentsdk.model.PaymentRequest
+import com.eliascoelho911.paymentsdk.model.PaymentStatus
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.okhttp.*
@@ -20,7 +20,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class StripeClient(
+internal class StripeClient(
     private val configuration: StripeConfiguration = StripeConfiguration.fromEnvironment(),
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : PaymentClient {

@@ -1,13 +1,13 @@
-package com.eliascoelho911.paymentsdk.gateway.sandbox
+package com.eliascoelho911.paymentsdk.external.client.sandbox
 
-import com.eliascoelho911.paymentsdk.api.DeclineReason
-import com.eliascoelho911.paymentsdk.api.PaymentRequest
-import com.eliascoelho911.paymentsdk.api.PaymentStatus
-import com.eliascoelho911.paymentsdk.domain.model.CardPayload
-import com.eliascoelho911.paymentsdk.gateway.PaymentClient
+import com.eliascoelho911.paymentsdk.external.client.PaymentClient
+import com.eliascoelho911.paymentsdk.model.CardPayload
+import com.eliascoelho911.paymentsdk.model.DeclineReason
+import com.eliascoelho911.paymentsdk.model.PaymentRequest
+import com.eliascoelho911.paymentsdk.model.PaymentStatus
 import kotlinx.coroutines.delay
 
-class SandboxPaymentClient(
+internal class SandboxPaymentClient(
     private val processingDelayMillis: Long = 200L,
     private val timestampProvider: () -> Long = System::currentTimeMillis
 ) : PaymentClient {

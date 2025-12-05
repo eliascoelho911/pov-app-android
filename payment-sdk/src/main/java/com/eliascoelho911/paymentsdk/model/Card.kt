@@ -1,4 +1,4 @@
-package com.eliascoelho911.paymentsdk.domain.model
+package com.eliascoelho911.paymentsdk.model
 
 data class CardDisplayInfo(
     val maskedPan: String,
@@ -10,4 +10,9 @@ data class CardPayload(
     val cardHolderName: String,
     val expirationDate: String,
     val cvv: String
+)
+
+data class Card(
+    val payload: CardPayload,
+    val displayInfo: CardDisplayInfo
 )
